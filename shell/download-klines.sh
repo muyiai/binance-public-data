@@ -9,12 +9,14 @@ months=(01 02 03 04 05 06 07 08 09 10 11 12)
 
 baseurl="https://data.binance.vision/data/spot/monthly/klines"
 
+data_path=$1
+
 for symbol in ${symbols[@]}; do
   for interval in ${intervals[@]}; do
     for year in ${years[@]}; do
       for month in ${months[@]}; do
         url="${baseurl}/${symbol}/${interval}/${symbol}-${interval}-${year}-${month}.zip"
-        response=$(wget --server-response -q ${url} 2>&1 | awk 'NR==1{print $2}')
+        response=$(wget --server-response -q ${url} -O ${data_path}/${symbol}-${interval}-${year}-${month}.zip 2>&1 | awk 'NR==1{print $2}')
         if [ ${response} == '404' ]; then
           echo "File not exist: ${url}" 
         else
